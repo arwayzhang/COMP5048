@@ -1,0 +1,170 @@
+[
+    [
+        "So. Korea", 
+        {
+            "confederation": "AFC", 
+            "weight": 0.10256410256410256
+        }
+    ], 
+    [
+        "USA", 
+        {
+            "confederation": "CONCACAF", 
+            "weight": 0.08974358974358974
+        }
+    ], 
+    [
+        "Mexico", 
+        {
+            "confederation": "CONCACAF", 
+            "weight": 0.1923076923076923
+        }
+    ], 
+    [
+        "Brazil", 
+        {
+            "confederation": "CONMEBOL", 
+            "weight": 0.9615384615384615
+        }
+    ], 
+    [
+        "Argentina", 
+        {
+            "confederation": "CONMEBOL", 
+            "weight": 0.48717948717948717
+        }
+    ], 
+    [
+        "Chile", 
+        {
+            "confederation": "CONMEBOL", 
+            "weight": 0.1282051282051282
+        }
+    ], 
+    [
+        "Uruguay", 
+        {
+            "confederation": "CONMEBOL", 
+            "weight": 0.2692307692307692
+        }
+    ], 
+    [
+        "Italy", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.7051282051282051
+        }
+    ], 
+    [
+        "France", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.41025641025641024
+        }
+    ], 
+    [
+        "Czechoslovakia", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.16666666666666666
+        }
+    ], 
+    [
+        "Germany", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.3076923076923077
+        }
+    ], 
+    [
+        "Belgium", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.1794871794871795
+        }
+    ], 
+    [
+        "Spain", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.3205128205128205
+        }
+    ], 
+    [
+        "Holland", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.2948717948717949
+        }
+    ], 
+    [
+        "Poland", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.2564102564102564
+        }
+    ], 
+    [
+        "Sweden", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.3205128205128205
+        }
+    ], 
+    [
+        "USSR", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.23076923076923075
+        }
+    ], 
+    [
+        "Switzerland", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.11538461538461538
+        }
+    ], 
+    [
+        "Bulgaria", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.08974358974358974
+        }
+    ], 
+    [
+        "England", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.4487179487179487
+        }
+    ], 
+    [
+        "W. Germany", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.6025641025641025
+        }
+    ], 
+    [
+        "Austria", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.16666666666666666
+        }
+    ], 
+    [
+        "Yugoslavia", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.23076923076923075
+        }
+    ], 
+    [
+        "Hungary", 
+        {
+            "confederation": "UEFA", 
+            "weight": 0.23076923076923075
+        }
+    ]
+]

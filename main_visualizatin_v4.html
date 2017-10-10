@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<meta charset "utf-8">
+<html>
+<head>
+    <title>Main Visualizaiton</title>
+    <style>
+line.edges, path.edges {
+  fill: none;
+  stroke: grey
+}
+circle.nodes {
+  fill: white;
+  stroke: black
+}
+/*text {
+  font-family: sans-serif;
+  font-size: 1em ;
+  pointer-events: none;
+}*/
+</style>
+    <script src="//d3js.org/d3.v3.min.js"></script>
+    <script src="//d3js.org/queue.v1.min.js"></script>
+    <script src="//d3js.org/d3-force.v1.min.js"></script>
+    <script src="//d3js.org/d3-path.v1.min.js"></script>
+    <script src="//d3js.org/d3-shape.v1.min.js"></script>
+</head>
+<body>
+    <script>
+    // setup of canvas
+    height = 1280,
+    width = 1280;
+    svg = d3.select("body").append("svg")
+        .attr("height",height)
+        .attr("width",width)
+        .attr("viewBox","-680 -350 1280 500");
+
+    //load data
+    queue()
+    .defer(d3.json,"Main_visualization.json")
+    .defer(d3.json,"core_node_ordered.json")
+    .defer(d3.json,"crust_node_ordered.json")
+    .await(ready);
+
+    function ready(error, countries, core_node, crust_node) {
+        if (error) throw error;
+
+        core_node_ordered = []
+        core_node.forEach(function (node) {
+            core_node_ordered.push(node[0])
+        })
+
+        crust_node_ordered = []
+        crust_node.forEach(function (node) {
+            crust_node_ordered.push(node[0])
+        })
+
+        nodes = countries.nodes;
+        //seperate core nodes and shell nodes
+        // nodes.sort(function(a, b) {
+        //     return a.type - b.type ||
+        //     a.confederation - b.confederation;
+        // });
+
+        console.log(nodes)
+
+        core_nodes = [];
+        shell_nodes = [];
+        nodes.forEach(function (node){
+            if (node.type === "core") {
+                core_nodes.unshift(node);
+            } else {
+                shell_nodes.unshift(node);
+            }
+        });
+        // console.log(core_nodes)
+        // console.log(nodes.length)
+        links = countries.links;
+        // console.log(countries.nodes)
+        // make scale for node size based on node weight
+        max_node_weight = Math.max.apply(Math,nodes.map(function(o){return o.weight;}))
+        min_node_weight = Math.min.apply(Math,nodes.map(function(o){return o.weight;}))
+
+        cScale = d3.scale.ordinal()
+            .domain(["CONMEBOL", "CONCACAF", "UEFA", "CAF", "AFC", "OFC"])
+            .range(["#DC143C", "#4169E1", "#8B008B", "#20B2AA", "	#FFA500", "	#FF4500"]);
+
+        var force = d3.layout.force()
+            .nodes(nodes)
+            .links(links);
+
+        // Initialize node location placement parameter
+        var increment_inner = core_nodes.length,
+            increment_outer = shell_nodes.length,
+            center = {"x": 0, "y": 0},
+            angle_init = 0,
+            i_out = 0,
+            i_in = 0,
+            angle_i = 360 / increment_inner + 0.1,
+            angle_o = 360 / increment_outer ;
+
+        // console.log(angle)
+        // circular_position is used to calculate the postion of nodes which are evenly distributed on an arc
+        function circular_position(node, index, angle, radius ) {
+            x = (center.x + radius * Math.cos(angle * index * Math.PI / 180));
+            y = (center.y + radius * Math.sin(angle * index * Math.PI / 180));
+            return x, y;
+        }
+
+        force.start();
+
+        nodes.forEach(function(d) {
+            // console.log(i)
+            if (d.type === "core") {
+                i_in = core_node_ordered.indexOf(d.id)
+                var coord = circular_position(d, i_in, angle_i, d.type === "core" ? 350 : 500)
+                // console.log(i_in)
+            } else {
+                i_out = crust_node_ordered.indexOf(d.id)
+                var coord = circular_position(d, i_out, angle_o, d.type === "core" ? 350 : 500)
+            }
+            d.x = x;
+            d.y = y;
+        });
+
+        var defs = svg.append("defs");
+        var gradient = defs.append("linearGradient")
+           .attr("id", "svgGradient")
+           .attr("x1", "0%")
+           .attr("x2", "100%")
+           .attr("y1", "0%")
+           .attr("y2", "100%");
+        gradient.append("stop")
+           .attr('class', 'start')
+           .attr("offset", "0%")
+           .attr("stop-color", "green")
+           .attr("stop-opacity", 1);
+        gradient.append("stop")
+           .attr('class', 'end')
+           .attr("offset", "100%")
+           .attr("stop-color", "red")
+           .attr("stop-opacity", 1);
+
+        var defs1 = svg.append("defs1");
+        var gradient = defs.append("linearGradient")
+            .attr("id", "svgGradient1")
+            .attr("x1", "0%")
+            .attr("x2", "100%")
+            .attr("y1", "0%")
+            .attr("y2", "100%");
+        gradient.append("stop")
+            .attr('class', 'start')
+            .attr("offset", "0%")
+            .attr("stop-color", "red")
+            .attr("stop-opacity", 1);
+        gradient.append("stop")
+            .attr('class', 'end')
+            .attr("offset", "100%")
+            .attr("stop-color", "green")
+            .attr("stop-opacity", 1);
+
+        var defs2 = svg.append("defs2");
+        var gradient = defs.append("linearGradient")
+            .attr("id", "svgGradient2")
+            .attr("x1", "0%")
+            .attr("x2", "100%")
+            .attr("y1", "100%")
+            .attr("y2", "0%");
+        gradient.append("stop")
+            .attr('class', 'start')
+            .attr("offset", "0%")
+            .attr("stop-color", "red")
+            .attr("stop-opacity", 1);
+        gradient.append("stop")
+            .attr('class', 'end')
+            .attr("offset", "100%")
+            .attr("stop-color", "green")
+            .attr("stop-opacity", 1);
+
+        var defs3 = svg.append("defs3");
+        var gradient = defs.append("linearGradient")
+            .attr("id", "svgGradient3")
+            .attr("x1", "0%")
+            .attr("x2", "100%")
+            .attr("y1", "100%")
+            .attr("y2", "0%");
+        gradient.append("stop")
+            .attr('class', 'start')
+            .attr("offset", "0%")
+            .attr("stop-color", "green")
+            .attr("stop-opacity", 1);
+        gradient.append("stop")
+            .attr('class', 'end')
+            .attr("offset", "100%")
+            .attr("stop-color", "red")
+            .attr("stop-opacity", 1);
+
+        function defineDirection(x1, x2, y1, y2) {
+            if (x1 > x2 && y1 > y2) {
+                return "url(#svgGradient)";
+            } else if (x1 < x2 && y1 < y2) {
+                return "url(#svgGradient1)"
+            } else if (x1 < x2 && y1 > y2) {
+                return "url(#svgGradient2)"
+            } else {
+                return "url(#svgGradient3)"
+            }
+        };
+        // console.log(path)
+        var lines = svg.selectAll("line")
+        .data(links)
+        .enter()
+        .append("line")
+        // .attr("class", "edges")
+        .attr("stroke-width", function(d) { return d.weight * 1.5; })
+        .attr("stroke", function(d) { return defineDirection(d.source.x, d.target.x, d.source.y, d.target.y)})
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+        var gnodes = svg.selectAll('g.gnode')
+            .data(nodes)
+            .enter()
+            .append('g')
+            .attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y +")"
+            });
+
+        var node = gnodes.append("circle")
+            .attr("r", function(d) { return d.weight / 1.2 + 0.5; })
+            // .attr("class", "nodes")
+            .attr("fill", function(d) { return cScale(d.confederation); })
+            .on("mouseenter", function(d) {
+                is_connected(d, 0.05)
+                node.transition()
+                .duration(200)
+                .attr("r", function(d) { return d.weight / 1.2 + 0.5; })
+                d3.select(this)
+                .transition()
+                .duration(200)
+                .attr("r", function(d) { return d.weight / 0.75 + 0.5; })
+            })
+            .on("mouseleave", function(d) {
+                node.transition()
+                .duration(200)
+                .attr("r", function(d) { return d.weight / 1.2 + 0.5; });
+                is_connected(d, 1);
+            });
+
+        var labels = gnodes.append("text")
+            .attr("dy", 0.1)
+            .text(function(d){return d.id})
+            // .attr("transform", function(d) { return "rotate(" + (d.x - 300) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 600 ? "" : "rotate(180)"); })
+            .attr("text-anchor", function(d) { return d.x > 0 ? "start" : "end"; })
+            .attr("font-size","1em")
+
+        // function used to distinguish select and non-selected edges
+        var is_connected = function(d, opacity) {
+            lines.transition().style("stroke-opacity", function(o) {
+        return o.source === d || o.target === d ? 1 : opacity;
+        });
+        }
+
+        function generateSegments(nodes, links) {
+            // Calculate distance between nodes
+            var distance = function(source, target) {
+                var x2 = Math.pow(target.x - source.x, 2);
+                var y2 = Math.pow(target.y - source.y, 2);
+
+                return Math.sqrt(x2 + y2);
+            };
+
+            var max_distance = Math.sqrt(width * width + height * height);
+
+            var inner = d3.scale.linear()
+                .domain([0, max_distance])
+                .range([1, 15]);
+
+            var bundle = {nodes: [], links: [], paths: []};
+
+            bundle.nodes = nodes.map(function(d, i){
+                d.fx = d.x;
+                d.fy = d.y;
+                return d;
+            });
+
+            links.forEach(function(d, i){
+                var node_distance = distance(d.source, d.target),
+                    inner_node_number = Math.round(inner(length));
+
+                var xscale = d3.scale.linear()
+                    .domain([0, inner_node_number + 1])
+                    .range([d.source.x, d.target.x ]);
+
+                var yscale = d3.scale.linear()
+                    .domain([0, inner_node_number + 1])
+                    .range([d.source.y, d.target.y ]);
+
+                var source = d.source,
+                    target = null;
+
+                var local = [source];
+
+                for (var i = 1; i <= inner_node_number; i++) {
+                    targt = {
+                        x: xscale(i),
+                        y: yscale(i)
+                    };
+
+                    local.push(target);
+                    bundle.nodes.push(target);
+
+                    bundle.links.push({
+                        source: source,
+                        target: target
+                    });
+
+                    source = target;
+                }
+
+                local.push(d.target);
+
+                bundle.links.push({
+                    source: target,
+                    target: d.target
+                });
+
+                bundle.paths.push(local);
+
+            });
+
+            return bundle;
+        }
+    }
+
+    </script>
+</body>
+</html>
